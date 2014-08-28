@@ -1,0 +1,157 @@
+vendor(prop, args)
+  -webkit-{prop} args
+  {prop} args
+
+box-shadow(prop)
+  vendor('box-shadow', arguments)
+
+text-shadow(prop)
+  vendor('text-shadow', arguments)
+
+border-radius(px)
+  vendor('border-radius',px)
+
+border-radius-rt(px)
+  vendor('border-top-right-radius',px)
+
+border-radius-rb(px)
+  vendor('border-bottom-right-radius',px)
+
+border-radius-lt(px)
+  vendor('border-top-left-radius',px)
+
+border-radius-lb(px)
+  vendor('border-bottom-left-radius',px)
+
+
+// ratioに対応させたfunction
+$RATIOS = 1 2 3
+// 対応するratio[1 2 3]
+contentImage($path, $isBase64 = false)
+  for $ratio in $RATIOS
+    $s = 'all and (-webkit-min-device-pixel-ratio:' + $ratio + ')'
+    &
+      $ratio *= 10
+      $ext = extname($path)
+      $path = pathjoin(dirname($path), basename($path, $ext) + '-' + $ratio + $ext)
+      mediaQuery($s, $path, $isBase64)
+
+mediaQuery($conditions, $path, $isBase64)
+  if $isBase64
+    @media $conditions
+      background-image: b64($path)
+  else
+    @media $conditions
+      background-image: url($path)
+
+/*##汎用的box
+*/
+generic-box-border(bg-color = null, padding = null, color = null, border-px, boder-color, width = null, height = null)
+  if bg-color
+    background bg-color
+  if padding
+    padding padding
+  if color
+    color color
+  if width
+    width width
+  if height
+    height height
+  border solid border-px boder-color
+
+generic-box(bg-color = null, padding = null, color = null, width = null, height = null)
+  if bg-color
+    background bg-color
+  if padding
+    padding padding
+  if color
+    color color
+  if width
+    width width
+  if height
+    height height
+
+generic-circle-border(bg-color = null, width, border-px, boder-color)
+  width width
+  height width
+  border-radius(width/2 + border-px)
+  border solid border-px boder-color
+  if bg-color
+    background bg-color
+
+//袋文字2px
+open-face-2px(color)
+  text-shadow:
+    color 0 2px 2px,
+    color 0 1px 1px,
+    color 1px 1px 1px,
+    color 1px 0 1px,
+    color 2px 0 1px,
+    color 1px -1px 1px,
+    color 1px -2px 1px,
+    color 0 -2px 1px,
+    color -1px -2px 1px,
+    color -2px -2px 1px,
+    color -2px -1px 1px,
+    color -2px 0 1px,
+    color -2px 1px 1px,
+    color -1px 1px 1px
+
+//袋文字1px
+open-face-1px(color)
+  text-shadow:
+    color 0 1px 1px,
+    color 0 0 1px,
+    color 1px 0 1px,
+    color 0 -1px 1px,
+    color -1px -1px 1px,
+    color -1px 0 1px
+
+/*アニメーション*/
+
+shake-icon()
+  -webkit-animation-name shake
+  -webkit-animation-duration 1.5s
+  -webkit-animation-iteration-count infinite
+
+@-webkit-keyframes shake
+  0
+    top 78px
+  50%
+    top 75px
+  65%
+    top 78px
+  100%
+    top 78px
+
+/*アニメーション*/
+effect-filter()
+  overflow hidden
+  z-index 11
+  -webkit-animation harvest-icon 1s linear infinite
+@-webkit-keyframes harvest-icon
+  0
+    background-position left top
+  49.99%
+    background-position left top
+  50%
+    background-position right top
+  99.9%
+    background-position right top
+  100%
+    background-position left top
+
+
+//canvas
+canvas-base()
+  .canvas-base
+    -webkit-tap-highlight-color rgba(0,0,0,0)
+    backface-visibility hidden
+    -webkit-backface-visibility hidden
+    display inline-block
+    position absolute
+    left 0
+    top 0
+
+  .animating-canvas
+    z-index 5000 !important
